@@ -11,7 +11,6 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # Клонируем репозиторий
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -28,15 +27,9 @@ jobs:
         with:
           arch: x86
 
-      # Сборка проекта через qmake + nmake
-      - name: Build Artisan
+      # Создаём каталог сборки и запускаем CMake
+      - name: Configure and build with CMake
         run: |
-          qmake artisan.pro
-          nmake
-
-      # Загружаем готовый exe как артефакт (v4)
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: artisan-win32
-          path: release\artisan.exe
+          mkdir build
+          cd build
+          cmake -G "NMake Makefiles" -A Win32 ..
