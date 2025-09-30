@@ -34,9 +34,9 @@ jobs:
           qmake artisan.pro
           nmake
 
-      # Загружаем готовый exe как артефакт
+      # Загружаем готовый exe как артефакт (v4)
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artisan-win32
           path: release\artisan.exe
