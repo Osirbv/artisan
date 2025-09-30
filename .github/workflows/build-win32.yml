@@ -1,0 +1,42 @@
+name: Build Artisan Windows x86
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-win32:
+    runs-on: windows-latest
+
+    steps:
+      # Клонируем репозиторий
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Устанавливаем Qt 5.15.2 для Win32
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '5.15.2'
+          arch: win32_msvc2019
+
+      # Устанавливаем MSVC x86
+      - name: Setup MSVC x86
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x86
+
+      # Сборка проекта через qmake + nmake
+      - name: Build Artisan
+        run: |
+          qmake artisan.pro
+          nmake
+
+      # Загружаем готовый exe как артефакт
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: artisan-win32
+          path: release\artisan.exe
